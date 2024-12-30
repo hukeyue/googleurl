@@ -5,6 +5,7 @@
 #ifndef POLYFILLS_BASE_NOTREACHED_H_
 #define POLYFILLS_BASE_NOTREACHED_H_
 
+#include "polyfills/base/check.h"
 #include "polyfills/base/logging.h"
 
 #endif /* POLYFILLS_BASE_NOTREACHED_H_ */

@@ -17,7 +17,7 @@
 //  Operating System:
 //    IS_AIX / IS_ANDROID / IS_ASMJS / IS_CHROMEOS / IS_FREEBSD / IS_FUCHSIA /
 //    IS_IOS / IS_IOS_MACCATALYST / IS_LINUX / IS_MAC / IS_NACL / IS_NETBSD /
-//    IS_OPENBSD / IS_QNX / IS_SOLARIS / IS_WIN
+//    IS_OPENBSD / IS_QNX / IS_SOLARIS / IS_WIN / IS_OHOS
 //  Operating System family:
 //    IS_APPLE: IOS or MAC or IOS_MACCATALYST
 //    IS_BSD: FREEBSD or NETBSD or OPENBSD
@@ -58,6 +58,8 @@
 #if defined(__native_client__)
 // __native_client__ must be first, so that other OS_ defines are not set.
 #define OS_NACL 1
+#elif defined(__OHOS__)
+#define OS_OHOS 1
 #elif defined(ANDROID)
 #define OS_ANDROID 1
 #elif defined(__APPLE__)
@@ -129,7 +131,7 @@
     defined(OS_FREEBSD) || defined(OS_IOS) || defined(OS_LINUX) ||  \
     defined(OS_CHROMEOS) || defined(OS_MAC) || defined(OS_NACL) ||  \
     defined(OS_NETBSD) || defined(OS_OPENBSD) || defined(OS_QNX) || \
-    defined(OS_SOLARIS) || defined(OS_ZOS)
+    defined(OS_SOLARIS) || defined(OS_ZOS) || defined(OS_OHOS)
 #define OS_POSIX 1
 #endif
 
@@ -144,6 +146,12 @@
 #define BUILDFLAG_INTERNAL_IS_ANDROID() (1)
 #else
 #define BUILDFLAG_INTERNAL_IS_ANDROID() (0)
+#endif
+
+#if defined(OS_OHOS)
+#define BUILDFLAG_INTERNAL_IS_OHOS() (1)
+#else
+#define BUILDFLAG_INTERNAL_IS_OHOS() (0)
 #endif
 
 #if defined(OS_APPLE)
@@ -350,6 +358,11 @@
 #define ARCH_CPU_RISCV64 1
 #define ARCH_CPU_64_BITS 1
 #define ARCH_CPU_LITTLE_ENDIAN 1
+#elif defined(__riscv) && (__riscv_xlen == 32)
+#define ARCH_CPU_RISCV_FAMILY 1
+#define ARCH_CPU_RISCV32 1
+#define ARCH_CPU_32_BITS 1
+#define ARCH_CPU_LITTLE_ENDIAN 1
 #else
 #error Please add support for your architecture in build/build_config.h
 #endif
@@ -373,7 +386,7 @@
 #error Please add support for your compiler in build/build_config.h
 #endif
 
-#if defined(OS_ANDROID)
+#if defined(OS_ANDROID) || defined(OS_OHOS)
 // The compiler thinks std::string::const_iterator and "const char*" are
 // equivalent types.
 #define STD_STRING_ITERATOR_IS_CHAR_POINTER

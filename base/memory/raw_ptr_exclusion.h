@@ -8,6 +8,7 @@
 // Although `raw_ptr` is part of the standalone PA distribution, it is
 // easier to use the shorter path in `//base/memory`. We retain this
 // facade header for ease of typing.
-#include "base/allocator/partition_allocator/src/partition_alloc/pointers/raw_ptr_exclusion.h"  // IWYU pragma: export
+// #include "base/allocator/partition_allocator/src/partition_alloc/pointers/raw_ptr_exclusion.h"  // IWYU pragma: export
+#define RAW_PTR_EXCLUSION
 
 #endif  // BASE_MEMORY_RAW_PTR_EXCLUSION_H_
