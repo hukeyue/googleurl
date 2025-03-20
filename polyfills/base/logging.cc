@@ -1508,7 +1508,7 @@ void LogFileObject::Write(bool force_flush, uint64_t /*tick_counts*/, const char
     time_pid_stream.fill('0');
     time_pid_stream << 1900 + tm_time.tm_year << std::setw(2) << 1 + tm_time.tm_mon << std::setw(2) << tm_time.tm_mday
                     << '-' << std::setw(2) << tm_time.tm_hour << std::setw(2) << tm_time.tm_min << std::setw(2)
-                    << tm_time.tm_sec << '.' << GetMainThreadPid();
+                    << tm_time.tm_sec << '.' << static_cast<uint64_t>(GetMainThreadPid());
     const std::string& time_pid_string = time_pid_stream.str();
 
     if (base_filename_selected_) {
@@ -1988,9 +1988,9 @@ void LogMessage::Init(const char* file, int line, LogSeverity severity, void (Lo
     if (!log_prefix.empty())
       stream() << log_prefix << ':';
     if (log_process_id)
-      stream() << GetMainThreadPid() << ':';
+      stream() << static_cast<uint64_t>(GetMainThreadPid()) << ':';
     if (log_thread_id)
-      stream() << PlatformThread::CurrentId() << ':';
+      stream() << static_cast<uint64_t>(PlatformThread::CurrentId()) << ':';
     if (log_timestamp) {
 #if BUILDFLAG(IS_WIN)
       SYSTEMTIME local_time;
@@ -2355,8 +2355,10 @@ std::string LogSink::ToString(LogSeverity severity,
   std::ostringstream stream(std::string(message, message_len));
   stream.fill('0');
 
-  stream << log_severity_name(severity)[0] << std::setw(6) << tick_counts << ' ' << std::setfill(' ') << std::setw(5)
-         << PlatformThread::CurrentId() << std::setfill('0') << ' ' << file << ':' << line << "] ";
+  stream << log_severity_name(severity)[0] << std::setw(6) << tick_counts << ' '
+         << std::setfill(' ') << std::setw(5)
+         << static_cast<uint64_t>(PlatformThread::CurrentId())
+         << std::setfill('0') << ' ' << file << ':' << line << "] ";
 
   stream << std::string(message, message_len);
   return stream.str();
