@@ -229,6 +229,8 @@ bool StartsWithT(T str, T search_for, CompareCase case_sensitivity) {
     case CompareCase::INSENSITIVE_ASCII:
       return std::equal(search_for.begin(), search_for.end(), source.begin(),
                         CaseInsensitiveCompareASCII<CharT>());
+    default:
+      return false;
   }
 }
 
@@ -247,6 +249,8 @@ bool EndsWithT(T str, T search_for, CompareCase case_sensitivity) {
     case CompareCase::INSENSITIVE_ASCII:
       return std::equal(source.begin(), source.end(), search_for.begin(),
                         CaseInsensitiveCompareASCII<CharT>());
+    default:
+      return false;
   }
 }
 
