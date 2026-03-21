@@ -237,7 +237,7 @@ void DebugBreak() {
 #else
     volatile int go = 0;
     while (!go)
-      PlatformThread::Sleep(Milliseconds(100));
+      absl::SleepFor(absl::Milliseconds(100));
 #endif
   }
 }
