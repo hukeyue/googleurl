@@ -62,19 +62,19 @@ namespace logging {
 
 // Functions for turning check operand values into strings.
 // Caller takes ownership of the returned string.
-char* CheckOpValueStr(int v);
-char* CheckOpValueStr(unsigned v);
-char* CheckOpValueStr(long v);
-char* CheckOpValueStr(unsigned long v);
-char* CheckOpValueStr(long long v);
-char* CheckOpValueStr(unsigned long long v);
-char* CheckOpValueStr(const void* v);
-char* CheckOpValueStr(std::nullptr_t v);
-char* CheckOpValueStr(double v);
-char* CheckOpValueStr(const std::string& v);
+BASE_EXPORT char* CheckOpValueStr(int v);
+BASE_EXPORT char* CheckOpValueStr(unsigned v);
+BASE_EXPORT char* CheckOpValueStr(long v);
+BASE_EXPORT char* CheckOpValueStr(unsigned long v);
+BASE_EXPORT char* CheckOpValueStr(long long v);
+BASE_EXPORT char* CheckOpValueStr(unsigned long long v);
+BASE_EXPORT char* CheckOpValueStr(const void* v);
+BASE_EXPORT char* CheckOpValueStr(std::nullptr_t v);
+BASE_EXPORT char* CheckOpValueStr(double v);
+BASE_EXPORT char* CheckOpValueStr(const std::string& v);
 
 // Convert a streamable value to string out-of-line to avoid <sstream>.
-char* StreamValToStr(const void* v, void (*stream_func)(std::ostream&, const void*));
+BASE_EXPORT char* StreamValToStr(const void* v, void (*stream_func)(std::ostream&, const void*));
 
 #ifdef __has_builtin
 #define SUPPORTS_BUILTIN_ADDRESSOF (__has_builtin(__builtin_addressof))
@@ -133,7 +133,7 @@ inline
 }
 
 // Captures the result of a CHECK_op and facilitates testing as a boolean.
-class CheckOpResult {
+class BASE_EXPORT CheckOpResult {
  public:
   // An empty result signals success.
   constexpr CheckOpResult() {}

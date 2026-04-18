@@ -168,12 +168,12 @@ template<typename Char> struct CaseInsensitiveCompareASCII {
 //
 // Non-ASCII bytes (or UTF-16 code units in `StringPiece16`) are permitted but
 // will be compared unmodified.
-BASE_EXPORT constexpr int CompareCaseInsensitiveASCII(StringPiece a,
-                                                      StringPiece b) {
+inline constexpr int CompareCaseInsensitiveASCII(StringPiece a,
+                                                 StringPiece b) {
   return internal::CompareCaseInsensitiveASCIIT(a, b);
 }
-BASE_EXPORT constexpr int CompareCaseInsensitiveASCII(StringPiece16 a,
-                                                      StringPiece16 b) {
+inline constexpr int CompareCaseInsensitiveASCII(StringPiece16 a,
+                                                 StringPiece16 b) {
   return internal::CompareCaseInsensitiveASCIIT(a, b);
 }
 

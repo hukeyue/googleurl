@@ -66,7 +66,7 @@ class CheckOpResult;
 class LogMessage;
 
 // Class used for raising a check error upon destruction.
-class CheckError {
+class BASE_EXPORT CheckError {
  public:
   static CheckError Check(const char* file, int line, const char* condition);
   static CheckError CheckOp(const char* file, int line, ::gurl_base::logging::CheckOpResult* result);
@@ -139,8 +139,8 @@ class CheckError {
 #endif
 
 // Async signal safe checking mechanism.
-void RawCheck(const char* message);
-void RawError(const char* message);
+BASE_EXPORT void RawCheck(const char* message);
+BASE_EXPORT void RawError(const char* message);
 #define RAW_CHECK(condition)                      \
   do {                                            \
     if (!(condition))                             \

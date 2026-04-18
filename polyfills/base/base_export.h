@@ -5,9 +5,11 @@
 #ifndef POLYFILLS_BASE_BASE_EXPORT_H_
 #define POLYFILLS_BASE_BASE_EXPORT_H_
 
+#include <base/component_export.h>
+
 // Required to get some of the headers to compile.
 #include <limits>
 
-#define BASE_EXPORT
+#define BASE_EXPORT COMPONENT_EXPORT(base)
 
 #endif  /* POLYFILLS_BASE_BASE_EXPORT_H_ */

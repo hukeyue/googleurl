@@ -171,7 +171,7 @@ constexpr LogSeverity LOGGING_0 = LOGGING_ERROR;
 
 namespace gurl_base {
 namespace logging {
-extern std::ostream* g_swallow_stream;
+BASE_EXPORT extern std::ostream* g_swallow_stream;
 }  // namespace logging
 }  // namespace gurl_base
 
@@ -274,7 +274,7 @@ namespace logging {
 //	 one needs to supply the exact --vmodule pattern that applied to them.
 //       (If no --vmodule pattern applied to them
 //       the value of FLAGS_v will continue to control them.)
-extern int SetVLOGLevel(const char* module_pattern, int log_level);
+BASE_EXPORT int SetVLOGLevel(const char* module_pattern, int log_level);
 
 // Various declarations needed for VLOG_IS_ON above: =========================
 
@@ -286,15 +286,16 @@ extern int SetVLOGLevel(const char* module_pattern, int log_level);
 //   verbose_level is the argument to VLOG_IS_ON
 // We will return the return value for VLOG_IS_ON
 // and if possible set *site_flag appropriately.
+BASE_EXPORT
 extern bool InitVLOG3__(absl::Flag<int32_t>** site_flag,
                         absl::Flag<int32_t>* site_default,
                         const char* fname,
                         int32_t verbose_level);
 
 // Enable/Disable old log cleaner.
-void EnableLogCleaner(int overdue_days);
-void DisableLogCleaner();
-void SetApplicationFingerprint(const std::string& fingerprint);
+BASE_EXPORT void EnableLogCleaner(int overdue_days);
+BASE_EXPORT void DisableLogCleaner();
+BASE_EXPORT void SetApplicationFingerprint(const std::string& fingerprint);
 
 class LogSink;  // defined below
 
@@ -322,7 +323,7 @@ struct CrashReason;
 // LogMessage::LogStream is a std::ostream backed by this streambuf.
 // This class ignores overflow and leaves two bytes at the end of the
 // buffer to allow for a '\n' and '\0'.
-class LogStreamBuf : public std::streambuf {
+class BASE_EXPORT LogStreamBuf : public std::streambuf {
  public:
   // REQUIREMENTS: "len" must be >= 2 to account for the '\n' and '\0'.
   LogStreamBuf(char* buf, int len) { setp(buf, buf + len - 2); }
@@ -344,7 +345,7 @@ class LogStreamBuf : public std::streambuf {
 // You shouldn't actually use LogMessage's constructor to log things,
 // though.  You should use the LOG() macro (and variants thereof)
 // above.
-class LogMessage {
+class BASE_EXPORT LogMessage {
  public:
   enum {
     // Passing kNoLogPrefix for the line number disables the
@@ -488,7 +489,7 @@ class LogMessage {
 // This class happens to be thread-hostile because all instances share
 // a single data buffer, but since it can only be created just before
 // the process dies, we don't worry so much.
-class LogMessageFatal : public LogMessage {
+class BASE_EXPORT LogMessageFatal : public LogMessage {
  public:
   LogMessageFatal(const char* file, int line);
   [[noreturn]] ~LogMessageFatal();
@@ -509,7 +510,7 @@ inline void LogAtLevel(int const severity, std::string const& msg) {
 // This class is used to explicitly ignore values in the conditional
 // logging macros.  This avoids compiler warnings like "value computed
 // is not used" and "statement has no effect".
-class LogMessageVoidify {
+class BASE_EXPORT LogMessageVoidify {
  public:
   LogMessageVoidify() = default;
   // This has to be an operator with a precedence lower than << but
@@ -525,12 +526,12 @@ typedef int SystemErrorCode;
 
 // Alias for ::GetLastError() on Windows and errno on POSIX. Avoids having to
 // pull in windows.h just for GetLastError() and DWORD.
-SystemErrorCode GetLastSystemErrorCode();
-std::string SystemErrorCodeToString(SystemErrorCode error_code);
+BASE_EXPORT SystemErrorCode GetLastSystemErrorCode();
+BASE_EXPORT std::string SystemErrorCodeToString(SystemErrorCode error_code);
 
 #if BUILDFLAG(IS_WIN)
 // Appends a formatted system message of the GetLastError() type.
-class Win32ErrorLogMessage : public LogMessage {
+class BASE_EXPORT Win32ErrorLogMessage : public LogMessage {
  public:
   Win32ErrorLogMessage(const char* file, int line, LogSeverity severity, SystemErrorCode err);
   Win32ErrorLogMessage(const Win32ErrorLogMessage&) = delete;
@@ -543,7 +544,7 @@ class Win32ErrorLogMessage : public LogMessage {
 };
 #elif BUILDFLAG(IS_POSIX)
 // Appends a formatted system message of the errno type
-class ErrnoLogMessage : public LogMessage {
+class BASE_EXPORT ErrnoLogMessage : public LogMessage {
  public:
   ErrnoLogMessage(const char* file, int line, LogSeverity severity, SystemErrorCode err);
   ErrnoLogMessage(const ErrnoLogMessage&) = delete;
@@ -558,19 +559,19 @@ class ErrnoLogMessage : public LogMessage {
 
 // Flushes all log files that contains messages that are at least of
 // the specified severity level.  Thread-safe.
-void FlushLogFiles(LogSeverity min_severity);
+BASE_EXPORT void FlushLogFiles(LogSeverity min_severity);
 
 // Flushes all log files that contains messages that are at least of
 // the specified severity level. Thread-hostile because it ignores
 // locking -- used for catastrophic failures.
-void FlushLogFilesUnsafe(LogSeverity min_severity);
+BASE_EXPORT void FlushLogFilesUnsafe(LogSeverity min_severity);
 
 //
 // Set the destination to which a particular severity level of log
 // messages is sent.  If base_filename is "", it means "don't log this
 // severity".  Thread-safe.
 //
-void SetLogDestination(LogSeverity severity, const char* base_filename);
+BASE_EXPORT void SetLogDestination(LogSeverity severity, const char* base_filename);
 
 //
 // Set the basename of the symlink to the latest log file at a given
@@ -578,14 +579,14 @@ void SetLogDestination(LogSeverity severity, const char* base_filename);
 // you don't call this function, the symlink basename is the
 // invocation name of the program.  Thread-safe.
 //
-void SetLogSymlink(LogSeverity severity, const char* symlink_basename);
+BASE_EXPORT void SetLogSymlink(LogSeverity severity, const char* symlink_basename);
 
 //
 // Used to send logs to some other kind of destination
 // Users should subclass LogSink and override send to do whatever they want.
 // Implementations must be thread-safe because a shared instance will
 // be called from whichever thread ran the LOG(XXX) line.
-class LogSink {
+class BASE_EXPORT LogSink {
  public:
   virtual ~LogSink();
 
@@ -646,8 +647,8 @@ class LogSink {
 };
 
 // Add or remove a LogSink as a consumer of logging data.  Thread-safe.
-void AddLogSink(LogSink* destination);
-void RemoveLogSink(LogSink* destination);
+BASE_EXPORT void AddLogSink(LogSink* destination);
+BASE_EXPORT void RemoveLogSink(LogSink* destination);
 
 //
 // Specify an "extension" added to the filename specified via
@@ -655,31 +656,31 @@ void RemoveLogSink(LogSink* destination);
 // often used to append the port we're listening on to the logfile
 // name.  Thread-safe.
 //
-void SetLogFilenameExtension(const char* filename_extension);
+BASE_EXPORT void SetLogFilenameExtension(const char* filename_extension);
 
 //
 // Make it so that all log messages of at least a particular severity
 // are logged to stderr (in addition to logging to the usual log
 // file(s)).  Thread-safe.
 //
-void SetStderrLogging(LogSeverity min_severity);
+BASE_EXPORT void SetStderrLogging(LogSeverity min_severity);
 
 //
 // Make it so that all log messages go only to stderr.  Thread-safe.
 //
-void LogToStderr();
+BASE_EXPORT void LogToStderr();
 
-const std::vector<std::string>& GetLoggingDirectories();
+BASE_EXPORT const std::vector<std::string>& GetLoggingDirectories();
 
 // Returns a set of existing temporary directories, which will be a
 // subset of the directories returned by GetLogginDirectories().
 // Thread-safe.
-void GetExistingTempDirectories(std::vector<std::string>* list);
+BASE_EXPORT void GetExistingTempDirectories(std::vector<std::string>* list);
 
 // Print any fatal message again -- useful to call from signal handler
 // so that the last thing in the output is the fatal message.
 // Thread-hostile, but a race is unlikely.
-void ReprintFatalMessage();
+BASE_EXPORT void ReprintFatalMessage();
 
 // Truncate a log file that may be the append-only output of multiple
 // processes and hence can't simply be renamed/reopened (typically a
@@ -688,12 +689,12 @@ void ReprintFatalMessage();
 // be racing with other writers, this approach has the potential to
 // lose very small amounts of data. For security, only follow symlinks
 // if the path is /proc/self/fd/*
-void TruncateLogFile(const char* path, int64_t limit, int64_t keep);
+BASE_EXPORT void TruncateLogFile(const char* path, int64_t limit, int64_t keep);
 
 // Truncate stdout and stderr if they are over the value specified by
 // --max_log_size; keep the final 1MB.  This function has the same
 // race condition as TruncateLogFile.
-void TruncateStdoutStderr();
+BASE_EXPORT void TruncateStdoutStderr();
 
 // ---------------------------------------------------------------------
 // Implementation details that are not useful to most clients
@@ -706,7 +707,7 @@ void TruncateStdoutStderr();
 // Implementations should be thread-safe since the logging system
 // will write to them from multiple threads.
 
-class Logger {
+class BASE_EXPORT Logger {
  public:
   virtual ~Logger();
 
@@ -732,12 +733,12 @@ class Logger {
 // Get the logger for the specified severity level.  The logger
 // remains the property of the logging module and should not be
 // deleted by the caller.  Thread-safe.
-extern Logger* GetLogger(LogSeverity level);
+BASE_EXPORT extern Logger* GetLogger(LogSeverity level);
 
 // Set the logger for the specified severity level.  The logger
 // becomes the property of the logging module and should not
 // be deleted by the caller.  Thread-safe.
-extern void SetLogger(LogSeverity level, Logger* logger);
+BASE_EXPORT extern void SetLogger(LogSeverity level, Logger* logger);
 
 // glibc has traditionally implemented two incompatible versions of
 // strerror_r(). There is a poorly defined convention for picking the
@@ -750,14 +751,14 @@ extern void SetLogger(LogSeverity level, Logger* logger);
 // cases, you do not need to check the error code and you can directly
 // use the value of "buf". It will never have an undefined value.
 // DEPRECATED: Use StrError(int) instead.
-int posix_strerror_r(int err, char* buf, size_t len);
+BASE_EXPORT int posix_strerror_r(int err, char* buf, size_t len);
 
 // A thread-safe replacement for strerror(). Returns a string describing the
 // given POSIX error code.
-std::string StrError(int err);
+BASE_EXPORT std::string StrError(int err);
 
 // A class for which we define operator<<, which does nothing.
-class NullStream : public LogMessage::LogStream {
+class BASE_EXPORT NullStream : public LogMessage::LogStream {
  public:
   // Initialize the LogStream so the messages can be written somewhere
   // (they'll never be actually displayed). This will be needed if a
@@ -786,17 +787,17 @@ inline NullStream& operator<<(NullStream& str, const T&) {
 
 // Similar to NullStream, but aborts the program (without stack
 // trace), like LogMessageFatal.
-class NullStreamFatal : public NullStream {
+class BASE_EXPORT NullStreamFatal : public NullStream {
  public:
   NullStreamFatal() {}
   [[noreturn]] ~NullStreamFatal() throw() { _exit(1); }
 };
 
 // Used by LOG_IS_ON to lazy-evaluate stream arguments.
-bool ShouldCreateLogMessage(LogSeverity severity);
+BASE_EXPORT bool ShouldCreateLogMessage(LogSeverity severity);
 
 // Async signal safe logging mechanism.
-void RawLog(int level, const char* message);
+BASE_EXPORT void RawLog(int level, const char* message);
 
 #define RAW_LOG(level, message) ::gurl_base::logging::RawLog(::gurl_base::logging::LOGGING_##level, message)
 
