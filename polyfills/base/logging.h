@@ -233,35 +233,35 @@ constexpr LogSeverity LOGGING_DCHECK = LOGGING_FATAL;
 
 }  // namespace logging
 }  // namespace gurl_base
-
-ABSL_DECLARE_FLAG(bool, tick_counts_in_logfile_name);
-ABSL_DECLARE_FLAG(bool, logtostderr);
-ABSL_DECLARE_FLAG(bool, alsologtostderr);
-ABSL_DECLARE_FLAG(bool, colorlogtostderr);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, tick_counts_in_logfile_name);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, logtostderr);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, alsologtostderr);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, colorlogtostderr);
 #if BUILDFLAG(IS_POSIX)
-ABSL_DECLARE_FLAG(bool, drop_log_memory);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, drop_log_memory);
 #endif
 
-ABSL_DECLARE_FLAG(int32_t, stderrthreshold);
-ABSL_DECLARE_FLAG(int32_t, minloglevel);
-ABSL_DECLARE_FLAG(int32_t, logbuflevel);
-ABSL_DECLARE_FLAG(int32_t, logbufsecs);
+BASE_EXPORT ABSL_DECLARE_FLAG(int32_t, stderrthreshold);
+BASE_EXPORT ABSL_DECLARE_FLAG(int32_t, minloglevel);
+BASE_EXPORT ABSL_DECLARE_FLAG(int32_t, logbuflevel);
+BASE_EXPORT ABSL_DECLARE_FLAG(int32_t, logbufsecs);
 
-ABSL_DECLARE_FLAG(int32_t, logfile_mode);
-ABSL_DECLARE_FLAG(std::string, log_dir);
-ABSL_DECLARE_FLAG(std::string, log_link);
-ABSL_DECLARE_FLAG(int32_t, max_log_size);
-ABSL_DECLARE_FLAG(bool, stop_logging_if_full_disk);
-ABSL_DECLARE_FLAG(std::string, log_backtrace_at);
+BASE_EXPORT ABSL_DECLARE_FLAG(int32_t, logfile_mode);
+BASE_EXPORT ABSL_DECLARE_FLAG(std::string, log_dir);
+BASE_EXPORT ABSL_DECLARE_FLAG(std::string, log_link);
+BASE_EXPORT ABSL_DECLARE_FLAG(int32_t, max_log_size);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, stop_logging_if_full_disk);
+BASE_EXPORT ABSL_DECLARE_FLAG(std::string, log_backtrace_at);
 
-ABSL_DECLARE_FLAG(int32_t, v);
-ABSL_DECLARE_FLAG(std::string, vmodule);
+BASE_EXPORT ABSL_DECLARE_FLAG(int32_t, v);
+BASE_EXPORT ABSL_DECLARE_FLAG(std::string, vmodule);
 
-ABSL_DECLARE_FLAG(bool, log_process_id);
-ABSL_DECLARE_FLAG(bool, log_thread_id);
-ABSL_DECLARE_FLAG(bool, log_timestamp);
-ABSL_DECLARE_FLAG(bool, log_tickcount);
-ABSL_DECLARE_FLAG(std::string, log_prefix);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, log_process_id);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, log_thread_id);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, log_timestamp);
+BASE_EXPORT ABSL_DECLARE_FLAG(bool, log_tickcount);
+BASE_EXPORT ABSL_DECLARE_FLAG(std::string, log_prefix);
+BASE_EXPORT ABSL_DECLARE_FLAG(std::string, log_program_name);
 
 namespace gurl_base {
 namespace logging {

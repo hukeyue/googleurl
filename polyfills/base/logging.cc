@@ -213,7 +213,6 @@ typedef FILE* FileHandle;
 
 #include <absl/debugging/stacktrace.h>
 #include <absl/debugging/symbolize.h>
-#include <absl/flags/internal/program_name.h>
 #include <absl/strings/str_split.h>
 #include <absl/synchronization/mutex.h>
 
@@ -237,6 +236,7 @@ ABSL_FLAG(bool, log_timestamp, true, "Prepend the timestamp to the start of each
 ABSL_FLAG(bool, log_tickcount, false, "Prepend the monotonic time to the start of each log line");
 
 ABSL_FLAG(std::string, log_prefix, std::string(), "Prepend the log prefix to the start of each log line");
+ABSL_FLAG(std::string, log_program_name, std::string(), "the program name of log to the start of each log line");
 
 #if BUILDFLAG(IS_APPLE)
 // Notes:
@@ -1287,7 +1287,7 @@ void SetApplicationFingerprint(const std::string& fingerprint) {
 LogFileObject::LogFileObject(LogSeverity severity, const char* base_filename)
     : base_filename_selected_(base_filename != nullptr),
       base_filename_((base_filename != nullptr) ? base_filename : ""),
-      symlink_basename_(absl::flags_internal::ShortProgramInvocationName()),
+      symlink_basename_(absl::GetFlag(FLAGS_log_program_name)),
       severity_(severity),
       rollover_attempt_(kRolloverAttemptFrequency - 1),
       start_time_(MonotoicTickCount()) {
@@ -1529,7 +1529,7 @@ void LogFileObject::Write(bool force_flush, uint64_t /*tick_counts*/, const char
       //
       // Where does the file get put?  Successively try the directories
       // "/tmp", and "."
-      std::string stripped_filename(absl::flags_internal::ShortProgramInvocationName());
+      std::string stripped_filename(absl::GetFlag(FLAGS_log_program_name));
       std::string hostname;
       GetHostName(&hostname);
 
